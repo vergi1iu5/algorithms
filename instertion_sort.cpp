@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
 
-	int n, i, j, key;
+	int n, i, key;
 	stringstream buffer;
 	string buffer_str;
 
@@ -18,8 +18,12 @@ int main(){
 	i = 0;
 
 	while(i < n){
+		// Take next integer and add to end of A
 		buffer >> key;
 		A[i] = key;
+		// Compared added car to the previous one
+		// If added card is larger, swap them
+		// Continue swapping until all elements have been added
 		for(int j = i - 1; j >= 0; j--){
 			if (A[j] > key){
 				A[j + 1] = A[j];
@@ -30,7 +34,7 @@ int main(){
 		}
 		i++;
 	}
-
+	// Print out result
 	for(int i = 0; i < n; i++){
 		cout << A[i] << ' ';
 	}

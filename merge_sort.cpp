@@ -25,7 +25,7 @@ int main(){
 		buffer >> A[i];
 	}
 	
-	merge_sort(A, p, r);
+	merge_sort(A, p, r); 
 
 	for(int i = 0; i < r; i++){
         cout << A[i] << endl;
