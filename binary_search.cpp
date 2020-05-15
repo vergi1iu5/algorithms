@@ -16,7 +16,7 @@
 //				return -1
 //		else
 //			p, q = move_indexes(A, p, q, v)
-//			binary_search(A, p, q, v)
+//			return binary_search(A, p, q, v)
 //		 
 //			
 //			
@@ -26,21 +26,31 @@
 
 using namespace std;
 
-int binary_search(int A[], int p, int q, int v){
-	if (p <= q){
-		cout << p << q << endl;
-		int mid = (p + q) / 2;
-		 if(A[mid] == v){
-		 	return mid;
-		 }
-		 if (A[mid] > v){
-		 	return binary_search(A, p, mid - 1, v);
-		 }else{
-		 	return binary_search(A, mid + 1, q, v);
-		 }
-	}else{
-		return -1;
+std::vector <int> move_indexes(int A[], int p, int q, int v){
+	int mid = (p+q)/2;
+	if (A[mid] > v){
+		return {p, mid - 1};
 	}
+	if (A[mid] < v){
+		return {mid + 1, q};
+	}
+	return {mid, mid};
+}
+
+int binary_search(int A[], int p, int q, int v){
+	if (p == q){
+
+		if (A[p] == v){
+			return p;
+		}
+		else{
+			return -1;
+		}
+	}
+	else{
+		std::vector<int> result = move_indexes(A, p, q, v);
+		return binary_search(A, result[0], result[1], v);
+	}	
 }
 
 int main(){
