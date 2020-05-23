@@ -74,24 +74,28 @@ int main(){
 	int left, right, mid, n;
 	string buffer_str;
 	stringstream buffer;
-
+	
+	// Get number of elements
 	getline(cin, buffer_str);
 	n = stoi(buffer_str);
 	buffer_str = "";
 	int A[n];
+	
+	// Populate array
 	getline(cin, buffer_str);
 	buffer.str(buffer_str);
-
+	for(int i = 0; i < n; i++){
+		buffer >> A[i];
+	}
+	
 	left = 0;
 	right = n - 1;
 	mid = (left + right) / 2;
 
-	for(int i = 0; i < n; i++){
-		buffer >> A[i];
-	}
-
+	// Initiate reacurrance
 	std::vector <int> result = sub_max(A, left, right);
 
+	// Display results
 	cout << result[0] << endl;
 	cout << result[1] << endl;
 	cout << result[2] << endl;
