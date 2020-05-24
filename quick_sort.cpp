@@ -33,35 +33,47 @@ int hoare_partition(int A[], int p, int r){
 	}
 }
 
-int partition(int A[], int p, int r){
+void partition(int A[], int p, int r, int results[]){
 	int pivot = A[r];
 
 	int i = p - 1;
+	int t = i;
 	int temp;
 
 	for(int j = p; j < r; j++){
+		
 		if (A[j] < pivot){
 			i++;
+			t++;
 			temp = A[j];
 			A[j] = A[i];
 			A[i] = temp;
+		}
+
+		if(A[j] == pivot){
+			t++;
+			temp = A[j];
+			A[j] = A[t];
+			A[t] = temp;
 		}
 	}
 
 	A[r] = A[i + 1];
 	A[i + 1] = pivot;
 
-	return i + 1;
+	results[0] = i + 1;
+	results[1] = t;
+	
 }
 
 void quick_sort(int A[], int p, int r){
 	
-	int q;
+	int indx[2];
 
 	if (p < r){
-		q = hoare_partition(A, p, r);
-		quick_sort(A, p, q - 1);
-		quick_sort(A, q + 1, r);
+		partition(A, p, r, indx);
+		quick_sort(A, p, indx[0] - 1);
+		quick_sort(A, indx[1] + 1, r);
 	}
 }
 
