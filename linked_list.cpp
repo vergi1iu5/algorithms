@@ -3,122 +3,95 @@
 
 using namespace std;
 ////////////////////////////////////////////////////////////////////////////
-class node{
-
-	public:
-
-		int key;
-		node * next, * prev;
-
-		void * p;
-
-		node();
-		node(int, void*, int);
-		void operator= (const node);
-
-		//node Next(){return next;}
-		//node Prev(){return prev;}
-		int Key(){return key;}
+struct node{
+	node * next, * prev;
+	int data;
+	int key;
 };
-
-node::node(){
-	next = nullptr;
-	prev = nullptr;
-	key = 0;
-	p = nullptr;
-}
-
-node::node(int k, void* data, int psize){
-
-	next = nullptr;
-	prev = nullptr;
-	
-	if(psize == sizeof(char)){
-		p = (char*) data;
-	}else if(psize == sizeof(int)){
-		p = (int*) data;
-	}else{
-		p = nullptr;
-	}
-
-	key = k;
-
-}
 /////////////////////////////////////////////////////////////////////////////
 class linked_list{
-
-public:
-
-	node * head, * tail;
-
-	linked_list();
-	linked_list(node h);
-};
-
-linked_list::linked_list(){
 	
-	head = nullptr;
-	tail = nullptr;
-
-}
-
-linked_list::linked_list(node h){
-
-	h.prev = nullptr;
-	h.next = nullptr;
-
-	head = &h;
-	tail = &h;
-
-}
-//////////////////////////////////////////////////////////////////////////////
-
-void List_Insert(linked_list L, node x){
-
-	x.next = L.head;
-
-	if(L.head != nullptr){
-		(*(L.head)).prev = &x;
+private:
+	node * head, * tail;
+	int length;
+public:
+	
+	linked_list(){
+		head = nullptr;
+		tail = nullptr;
+		length = 0;
 	}
 
-	L.head = &x;
-	x.prev = nullptr;
-}
+	void insert_node(int d, int k){
+		node * temp = new node;
 
-void List_Delete(linked_list L, node x){
+		temp->next = head;
+		temp->prev = nullptr;
+		temp->data = d;
+		temp->key = k;
 
-	if (x.prev != nullptr){
-		(*(x.prev)).next = x.next;
-	}else{
-		L.head = x.next;
+		if(head != nullptr){
+			head->prev = temp;
+		}
+
+		head = temp;
+		length++;
 	}
 
-	if (x.next != nullptr){
-		(*(x.next)).prev = x.prev;
+	int delete_node(int k){
+
+		node * temp = head;
+
+		while(true){
+			if (temp != nullptr && temp->key == k){
+				
+				if(temp->prev != nullptr){
+					temp->prev->next = temp->next;
+				}else{
+					head = temp->next;
+				}
+
+				if(temp->next != nullptr){
+					temp->next->prev = temp->prev;
+				}
+
+				return 0;
+
+			}else if(temp->next != nullptr){
+				temp = temp->next;
+			}else{
+				return 1;
+			}
+		}
 	}
 
-}
+	int pop(int k){
+
+		node * temp = head;
+
+		while(true){
+			if (temp != nullptr && temp->key == k){
+				int save = temp->data;
+				delete_node(temp->key);
+				return save;
+			}else if(temp->next != nullptr){
+				temp = temp->next;
+			}else{
+				return 0;
+			}
+		}
+	}
+};
 ////////////////////////////////////////////////////////////////////////////////
 int main(){
 
-	char a = 'a';
-	char b = 'b';
-
-	char * ap = &a;
-	char * bp = &b;
-
-	int psize = sizeof(a);
-
-	node node_1(1, ap, psize);
-	node node_2(2, bp, psize);
-
 	linked_list L;
 
-	List_Insert(L, node_1);
-	List_Insert(L, node_2);
+	L.insert_node(1, 22);
+	L.insert_node(2, 33);
 
-	List_Delete(L, node_2);
+	cout << L.delete_node(22) << endl;
+	cout << L.pop(22) << endl;
 
-	cout << *((*(L.head)).p) << endl;
 
 }
