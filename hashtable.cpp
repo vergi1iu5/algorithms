@@ -12,74 +12,64 @@ struct node_hash{
 class Hashtable{
 private:
 
-	int lenght;
-	int (*hashFucntion) (int);
-	node_hash * array;
-	int * keys;
+	int BUCKETS;
+	int (*hashFucntion) (int, int);
+	LinkedList * table;
 
 public:
 
 	Hashtable(){
-		int lenght = 0;
+		this->BUCKETS = 0;
 		hashFucntion = nullptr;
+		table = nullptr;
 	}
 
-	Hashtable(int size, int (*h) (int), int node_keys[]){
+	Hashtable(int size, int (*h) (int, int)){
 		
-		lenght = size;
+		this->BUCKETS = size;
 		hashFucntion = h;
 
-		node_hash A[size];
-		array = A;
-
-		for(int i = 0; i < size; i++){
-			(array + i)->chain = nullptr;
-			(array + i)->node_key = node_keys[i];
-		}
+		table = new LinkedList[size];
 	}
 
 	void Insert(int key, int data){
-		int k = hashFucntion(key);
-		node_hash * temp_node = (array + k);
 
-		if (temp_node->chain == nullptr){
-			LinkedList * tempList = new LinkedList;
-			temp_node->chain = tempList;
-		}
-
-		temp_node->chain->insert_node(data, key);
+		int k = hashFucntion(key, BUCKETS);
+		table[k].insert_node(data, key);
 	}
 
 	int get_data(int key_data){
 
-		int k = hashFucntion(key_data);
-		node * temp = (array + k)->chain->head;
+		int k = hashFucntion(key_data, BUCKETS);
+		node * chain_node = table[k].head;
 		
-		while(temp->next != nullptr && temp->key != key_data){
-			temp = temp->next;
+		while(chain_node->next != nullptr && chain_node->key != key_data){
+			chain_node = chain_node->next;
 		}
 
-		return temp->data;
+		return chain_node->data;
 	}
 };
 ////////////////////////////////////////////////////////////////
-int basic_hash(int key){
-	return key;
+int basic_hash(int key, int num_buckets){
+	return key % num_buckets;
 }
 ////////////////////////////////////////////////////////////////
 int main(){
 
-	int (*foo)(int k);
+	int (*foo)(int k, int b);
 
 	foo = &basic_hash;
 
-	int keys[] = {1,2,3,4,5};
+	Hashtable test(5, foo);
 
-	Hashtable test(5, foo, keys);
-
-	test.Insert(2, 7);
+	test.Insert(2, 9);
+	test.Insert(3, 12);
+	//test.Insert(3, 10);
+	//test.Insert(3, 12);
 
 	cout << test.get_data(2) << endl;
+	cout << test.get_data(3) << endl;
 
 	return 0;
 }
